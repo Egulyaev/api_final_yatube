@@ -11,16 +11,20 @@ router.register(r'posts/(?P<post_id>[\da-z]+)/comments',
                 CommentViewSet, basename='comment')
 router.register('follow', FollowViewSet, basename='follow')
 
-urlpatterns = [
-    path('v1/', include(router.urls)),
+jwt = [
     path(
-        'v1/token/',
+        '',
         views.TokenObtainPairView.as_view(),
         name="jwt-create"
     ),
     path(
-        'v1/token/refresh/',
+        'refresh/',
         views.TokenRefreshView.as_view(),
         name="jwt-refresh"
     ),
+]
+
+urlpatterns = [
+    path('v1/', include(router.urls)),
+    path('v1/token/', include(jwt)),
 ]
