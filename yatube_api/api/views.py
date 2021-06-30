@@ -2,7 +2,7 @@ from django.utils.text import slugify
 from rest_framework import filters, mixins, permissions, status, viewsets
 from rest_framework.response import Response
 
-from .models import Comment, Follow, Group, Post, User
+from .models import Comment, Follow, Group, Post
 from .permission import IsAuthorOrReadOnly
 from .serializers import (CommentSerializer, FollowSerializer, GroupSerializer,
                           PostSerializer)
