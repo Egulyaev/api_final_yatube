@@ -41,7 +41,8 @@ class FollowSerializer(serializers.ModelSerializer):
 
     def validate(self, data):
         user = self.context['request'].user
-        if user.username == self.initial_data.get('following', False):
+        following = data['following']
+        if user ==  following:
             raise serializers.ValidationError(
                 "User and following must be different"
             )
