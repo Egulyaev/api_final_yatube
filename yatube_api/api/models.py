@@ -7,54 +7,65 @@ User = get_user_model()
 class Group(models.Model):
     title = models.CharField(
         max_length=200,
-        verbose_name="Наименование группы"
+        verbose_name='Наименование группы'
     )
     slug = models.SlugField(
-        # unique=True,
-        verbose_name="Поле формирования Slug для Group"
+        unique=True,
+        verbose_name='Поле формирования Slug для Group'
     )
-    description = models.TextField(verbose_name="Описание группы")
+    description = models.TextField(verbose_name='Описание группы')
 
     def __str__(self):
-        return self.title
+        return self.title[:15]
 
     class Meta:
-        verbose_name_plural = "Группы"
-        verbose_name = "Группа"
+        verbose_name_plural = 'Группы'
+        verbose_name = 'Группа'
 
 
 class Post(models.Model):
     text = models.TextField()
     pub_date = models.DateTimeField(
-        "Дата публикации", auto_now_add=True
+        'Дата публикации', auto_now_add=True
     )
     author = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name="posts"
+        User, on_delete=models.CASCADE, related_name='posts'
     )
     group = models.ForeignKey(
         Group,
         on_delete=models.SET_NULL,
         blank=True,
         null=True,
-        related_name="posts",
-        verbose_name="Группа поста"
+        related_name='posts',
+        verbose_name='Группа поста'
     )
 
     def __str__(self):
-        return self.text
+        return self.text[:15]
+
+    class Meta:
+        verbose_name_plural = 'Посты'
+        verbose_name = 'Пост'
 
 
 class Comment(models.Model):
     author = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name="comments"
+        User, on_delete=models.CASCADE, related_name='comments'
     )
     post = models.ForeignKey(
-        Post, on_delete=models.CASCADE, related_name="comments"
+        Post, on_delete=models.CASCADE, related_name='comments'
     )
     text = models.TextField()
     created = models.DateTimeField(
-        "Дата добавления", auto_now_add=True, db_index=True
+        'Дата добавления', auto_now_add=True, db_index=True
     )
+
+    def __str__(self):
+        return self.text[:15]
+
+    class Meta:
+        verbose_name_plural = 'Комментарии'
+        verbose_name = 'Комментарий'
 
 
 class Follow(models.Model):
@@ -68,9 +79,11 @@ class Follow(models.Model):
     )
 
     def __str__(self):
-        return f'Подписчики {self.following}'
+        return f'Подписчик {self.following}'
 
     class Meta:
+        verbose_name_plural = 'Подписчики'
+        verbose_name = 'Подписчик'
         constraints = [
             models.CheckConstraint(
                 check=~models.Q(user=models.F('following')),

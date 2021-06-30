@@ -5,24 +5,33 @@ from .models import Comment, Follow, Group, Post, User
 
 
 class PostSerializer(serializers.ModelSerializer):
-    author = serializers.ReadOnlyField(source='author.username')
+    author = serializers.SlugRelatedField(
+        slug_field='username',
+        read_only=True,
+    )
 
     class Meta:
         fields = ('id', 'text', 'author', 'pub_date')
+        read_only_field = ('author',)
         model = Post
 
 
 class CommentSerializer(serializers.ModelSerializer):
-    author = serializers.ReadOnlyField(source='author.username')
+    author = serializers.SlugRelatedField(
+        slug_field='username',
+        read_only=True,
+    )
 
     class Meta:
         fields = ('id', 'author', 'post', 'text', 'created')
+        read_only_field = ('author',)
         model = Comment
 
 
 class FollowSerializer(serializers.ModelSerializer):
     following = serializers.SlugRelatedField(
-        slug_field='username', queryset=User.objects.all()
+        slug_field='username',
+        queryset=User.objects.all(),
     )
     user = serializers.SlugRelatedField(
         slug_field='username',
@@ -53,4 +62,3 @@ class GroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = Group
         fields = ('title',)
-        read_only_fields = ('description',)
