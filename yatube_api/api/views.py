@@ -44,7 +44,8 @@ class CommentViewSet(viewsets.ModelViewSet):
         return queryset
 
     def perform_create(self, serializer):
-        serializer.save(author=self.request.user)
+        post = get_object_or_404(Post, pk=self.kwargs['post_id'])
+        serializer.save(author=self.request.user, post=post)
 
 
 class GroupViewSet(CreateListSet):
@@ -62,7 +63,7 @@ class FollowViewSet(CreateListSet):
     serializer_class = FollowSerializer
     permission_classes = (permissions.IsAuthenticated,)
     filter_backends = [filters.SearchFilter]
-    search_fields = ('=user__username', '=following__username',)
+    search_fields = ('=user__username', '=following__username')
 
     def perform_create(self, serializer):
         user = self.request.user
